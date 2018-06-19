@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#pem file
+alexa-skill-key.pem
+
 # C extensions
 *.so
 
