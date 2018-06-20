@@ -6,6 +6,9 @@ __pycache__/
 #pem file
 alexa-skill-key.pem
 
+#log file
+logfile.txt
+
 # C extensions
 *.so
 

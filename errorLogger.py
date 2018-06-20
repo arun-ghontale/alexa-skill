@@ -5,53 +5,36 @@ from __future__ import print_function
 
 import random
 import re
+import pandas as pd
+from extract_dates import parseLogs
 
-data = [
-    "A year on Mercury is just 88 days long.",
-    ("Despite being farther from the Sun, Venus experiences higher "
-     "temperatures than Mercury."),
-    ("Venus rotates counter-clockwise, possibly because of a collision"
-     " in the past with an asteroid."),
-    "On Mars, the Sun appears about half the size as it does on Earth.",
-    "Earth is the only planet not named after a god.",
-    "Jupiter has the shortest day of all the planets.",
-    ("The Milky Way galaxy will collide with the Andromeda Galaxy in about"
-     " 5 billion years."),
-    "The Sun contains 99.86% of the mass in the Solar System.",
-    "The Sun is an almost perfect sphere.",
-    ("A total solar eclipse can happen once every 1 to 2 years."
-     " This makes them a rare event."),
-    ("Saturn radiates two and a half times more energy into space"
-     " than it receives from the sun."),
-    "The temperature inside the Sun can reach 15 million degrees Celsius.",
-    "The Moon is moving approximately 3.8 cm away from our planet every year."
-]
-
-SKILL_NAME = "Space Facts"
-GET_FACT_MESSAGE = "Here's your fact: "
+SKILL_NAME = "Network Bot"
 HELP_MESSAGE = """You can request for error logs between two time slots . 
                     For example , you can say "ask error logs for logs from 5:53 am to 10:53 am" """
 STOP_MESSAGE = "Goodbye!"
 FALLBACK_MESSAGE = """The error logs skill can't help you with that.  
                     It can help you get error logs between two specific time periods. 
                     For example """+HELP_MESSAGE+"""" What can I help you with?"""
+
 FALLBACK_REPROMPT = 'What can I help you with?'
 
 # --------------- App entry point -----------------
 
-def lambda_handler(event, context):
+def request_handler(json_input):
     """  App entry point  """
 
-    #print(event)
-
-    if event['session']['new']:
+    #On launch send the helper message
+    if json_input['session']['new']:
         on_session_started()
 
-    if event['request']['type'] == "LaunchRequest":
-        return on_launch(event['request'])
-    elif event['request']['type'] == "IntentRequest":
-        return on_intent(event['request'], event['session'])
-    elif event['request']['type'] == "SessionEndedRequest":
+    #On launch send the helper message
+    if json_input['request']['type'] == "LaunchRequest":
+        return on_launch(json_input['request'])
+
+    #handle the intent requests
+    elif json_input['request']['type'] == "IntentRequest":
+        return on_intent(json_input['request'], json_input['session'])
+    elif json_input['request']['type'] == "SessionEndedRequest":
         return on_session_ended()
 
 # --------------- Response handlers -----------------
@@ -62,42 +45,58 @@ def on_intent(request, session):
     intent_name = request['intent']['name']
     
     # process the intents
-    if intent_name == "GetNewFactIntent":
-        return get_fact_response()
-    elif intent_name == "AMAZON.HelpIntent":
+    if intent_name == "AMAZON.HelpIntent":
         return get_help_response()
+    
     elif intent_name == "AMAZON.StopIntent":
         return get_stop_response()
+    
     elif intent_name == "AMAZON.CancelIntent":
         return get_stop_response()
+    
     elif intent_name == "AMAZON.FallbackIntent":
         return get_fallback_response()
+    
     elif intent_name == "recognizeDates":
         slots = request['intent']['slots']
-        date_start_slot = slots.get('dateStart',{'value':''}).get('value','')
-        date_end_slot = slots.get('dateEnd',{'value':''}).get('value','')
+        date_start_slot = slots.get('dateStart',{'value':'NA'}).get('value','NA')
+        date_end_slot = slots.get('dateEnd',{'value':'NA'}).get('value','NA')
+
         return get_intent_response(date_start_slot,date_end_slot)
+    
+    elif intent_name == "PollHprofs":
+        slots = request['intent']['slots']
+        print(slots)
+        speechOutput = "Under development"
+        return response(speech_response(speechOutput, True))
+
+    elif intent_name == "SpinVMs":
+        slots = request['intent']['slots']
+        print(slots)
+        speechOutput = "Under development"
+        return response(speech_response(speechOutput, True))
+
     else:
-        print("invalid Intent reply with help")
+        print("For invalid Intents reply with help")
         return get_help_response()
-
-def get_fact_response():
-    """ get and return a random fact """
-    randomFact = random.choice(data)
-    cardcontent = randomFact
-    speechOutput = GET_FACT_MESSAGE + randomFact
-
-    return response(speech_response_with_card(SKILL_NAME, speechOutput,
-                                                          cardcontent, True))
 
 def get_intent_response(date_start_slot,date_end_slot):
     """ parse and return their response"""
-    print("here",date_start_slot,date_end_slot)
-    start_slot = str(date_start_slot) if date_start_slot.strip() else ' nothing'
-    end_slot = str(date_end_slot) if date_end_slot.strip() else ' nothing'
-    print(start_slot,end_slot)
-    
-    speechOutput = re.sub(' +',' ','Error from '+ start_slot + ' to '+end_slot)
+    print("here",date_start_slot,date_end_slot)    
+    if date_start_slot != 'NA' and date_end_slot != 'NA':
+        speechOutput = re.sub(' +',' ','Parsing error Logs from '+ date_start_slot + ' to '+date_end_slot)
+
+    elif date_start_slot == 'NA' and date_end_slot != 'NA':
+        speechOutput = 'Parsing error logs at '+date_end_slot
+
+    elif date_start_slot != 'NA' and date_end_slot == 'NA':
+        speechOutput = 'Parsing error logs at '+date_start_slot
+
+    else:
+        speechOutput = 'Start and end times are unrecognizable'
+        
+    dataframe = pd.DataFrame({})
+    status = parseLogs(date_start_slot,date_end_slot,dataframe)
 
     return response(speech_response(speechOutput, True))
 
@@ -107,10 +106,6 @@ def get_help_response():
     speech_message = HELP_MESSAGE
     return response(speech_response_prompt(speech_message,
                                                        speech_message, False))
-def get_launch_response():
-    """ get and return the help string  """
-
-    return get_fact_response()
     
 def get_launch_error_response():
     """Helper message"""
@@ -153,54 +148,6 @@ def speech_response(output, endsession):
         'outputSpeech': {
             'type': 'PlainText',
             'text': output
-        },
-        'shouldEndSession': endsession
-    }
-
-def dialog_response(endsession):
-    """  create a simple json response with card """
-
-    return {
-        'version': '1.0',
-        'response':{
-            'directives': [
-                {
-                    'type': 'Dialog.Delegate'
-                }
-            ],
-            'shouldEndSession': endsession
-        }
-    }
-
-def speech_response_with_card(title, output, cardcontent, endsession):
-    """  create a simple json response with card """
-
-    return {
-        'card': {
-            'type': 'Simple',
-            'title': title,
-            'content': cardcontent
-        },
-        'outputSpeech': {
-            'type': 'PlainText',
-            'text': output
-        },
-        'shouldEndSession': endsession
-    }
-
-def response_ssml_text_and_prompt(output, endsession, reprompt_text):
-    """ create a Ssml response with prompt  """
-
-    return {
-        'outputSpeech': {
-            'type': 'SSML',
-            'ssml': "<speak>" +output +"</speak>"
-        },
-        'reprompt': {
-            'outputSpeech': {
-                'type': 'SSML',
-                'ssml': "<speak>" +reprompt_text +"</speak>"
-            }
         },
         'shouldEndSession': endsession
     }
