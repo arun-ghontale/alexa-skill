@@ -16,7 +16,7 @@ def parseLogs(date_start_slot,date_end_slot,dataframe):
 Logs = []
 regxPattern = r'\s+\d+:\d+:\d+[.]'
 dates = []
-with open('logfile.txt',encoding = 'utf-8') as f:
+with open('logfile.txt') as f:
     for eachLine in f.read().split('\n\n'):
         if eachLine.strip():
             Logs.append(eachLine)
