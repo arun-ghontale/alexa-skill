@@ -10,9 +10,9 @@ from extract_dates import parseLogs
 
 SKILL_NAME = "Network Bot"
 HELP_MESSAGE = """You can request for error logs between two time slots . 
-                    For example , you can say "ask error logs for logs from 5:53 am to 10:53 am" """
+                    For example , you can say "ask network bot for logs from 5:53 am to 10:53 am" """
 STOP_MESSAGE = "Goodbye!"
-FALLBACK_MESSAGE = """The error logs skill can't help you with that.  
+FALLBACK_MESSAGE = """The """+SKILL_NAME+""" skill can't help you with that.  
                     It can help you get error logs between two specific time periods. 
                     For example """+HELP_MESSAGE+"""" What can I help you with?"""
 
@@ -65,13 +65,13 @@ def on_intent(request, session):
         return get_intent_response(date_start_slot,date_end_slot)
     
     elif intent_name == "PollHprofs":
-        slots = request['intent']['slots']
+        slots = request['intent'].get('slots','')
         print(slots)
         speechOutput = "Under development"
         return response(speech_response(speechOutput, True))
 
     elif intent_name == "SpinVMs":
-        slots = request['intent']['slots']
+        slots = request['intent'].get('slots','')
         print(slots)
         speechOutput = "Under development"
         return response(speech_response(speechOutput, True))
