@@ -8,6 +8,7 @@ alexa-skill-key.pem
 
 #log file
 logfile.txt
+log_file.pkl
 
 # C extensions
 *.so
