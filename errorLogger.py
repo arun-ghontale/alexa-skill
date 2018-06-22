@@ -18,6 +18,8 @@ FALLBACK_MESSAGE = """The """+SKILL_NAME+""" skill can't help you with that.
 
 FALLBACK_REPROMPT = 'What can I help you with?'
 
+dataframe = load_dates(SAVE_DF = False)
+
 # --------------- App entry point -----------------
 
 def request_handler(json_input):
@@ -95,9 +97,11 @@ def get_intent_response(date_start_slot,date_end_slot):
     else:
         speechOutput = 'Start and end times are unrecognizable'
         
-    dataframe = pd.DataFrame({})
-    status = parseLogs(date_start_slot,date_end_slot,dataframe)
-
+    logs = parseLogs(date_start_slot,date_end_slot,dataframe)
+    with open('logs.txt','w') as f:
+        for each in logs:
+            f.write(each)
+            
     return response(speech_response(speechOutput, True))
 
 def get_help_response():

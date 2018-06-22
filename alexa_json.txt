@@ -40,7 +40,6 @@
                         }
                     ],
                     "samples": [
-                        "how many error logs at {dateStart} and {number}",
                         "how many error logs at {dateStart}",
                         "how many errors were encountered at {dateStart}",
                         "can you pull the error logs at {dateStart}",
@@ -55,6 +54,8 @@
                     "name": "PollHprofs",
                     "slots": [],
                     "samples": [
+                        "to check for hprof files"
+                        "to check for hprof file status",
                         "check for hprof file",
                         "See if hprof file has been generated",
                         "Check folder for hprof file",
@@ -65,6 +66,10 @@
                     "name": "SpinVMs",
                     "slots": [],
                     "samples": [
+                        "to spin up some virtual machines"
+                        "spin up some virtual machines",
+                        "spin up some VMs",
+                        "to spin up some VMs",
                         "let's create some virtual machines",
                         "let us spin up some VMs",
                         "let us spin up some virtual machines",
