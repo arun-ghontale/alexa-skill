@@ -107,12 +107,14 @@ def get_intent_response(date_start_slot,date_end_slot):
             f.write(str(each))
 
     with open('log_stats.txt','w') as f:
-        for each_key,each_value in stats.items():
-            f.write("Time : "+str(each_key)+'\t'+"Number of logs : "+str(len(each_value))+"\n\n")
-            for each_logs in each_value:
-                f.write(each_logs+"\n")
-            f.write("\n\n\n\n")
-    
+        with open('log_numbers.txt','w') as f_new:
+            for each_key,each_value in stats.items():
+                f.write("Time : "+str(each_key)+'\t'+"Number of logs : "+str(len(each_value))+"\n\n")
+                f_new.write("Time : "+str(each_key)+'\t'+"Number of logs : "+str(len(each_value))+"\n\n")
+                for each_logs in each_value:
+                    f.write(each_logs+"\n")
+                f.write("\n\n\n\n")
+
     os.system("nohup python send_mail.py &")
     
     return response(speech_response(speechOutput, True))
