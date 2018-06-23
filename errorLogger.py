@@ -103,11 +103,11 @@ def get_intent_response(date_start_slot,date_end_slot):
     
     with open('logs.txt','w') as f:
         for each in logs:
-            f.write(each)
+            f.write(str(each))
 
     with open('log_stats.txt','w') as f:
         for each_key,each_value in stats.items():
-            f.write("Time : "+each_key+'\t'+"Number of logs : "+len(each_value)+"\n\n")
+            f.write("Time : "+str(each_key)+'\t'+"Number of logs : "+str(len(each_value))+"\n\n")
             for each_logs in each_value:
                 f.write(each_logs+"\n")
             f.write("\n\n\n\n")
