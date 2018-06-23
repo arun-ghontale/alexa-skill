@@ -6,7 +6,7 @@ from __future__ import print_function
 import random
 import re
 import pandas as pd
-from extract_dates import parseLogs
+from extract_dates import parseLogs,load_dates
 
 SKILL_NAME = "Network Bot"
 HELP_MESSAGE = """You can request for error logs between two time slots . 
