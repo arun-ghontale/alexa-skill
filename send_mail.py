@@ -6,9 +6,14 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+<<<<<<< HEAD
+fromaddr = "arun.g.ghontale@gmail.com"
+toaddr = "ghontale.arun.agg@gmail.com"
+=======
 fromaddr = ""
 toaddr = "ghontale.arun.agg@gmail.com"
 password = ""
+>>>>>>> send_mail.py
 
 msg = MIMEMultipart()
 
@@ -42,7 +47,11 @@ msg.attach(part1)
 
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
+<<<<<<< HEAD
+server.login(fromaddr, 'arungg118211477')
+=======
 server.login(fromaddr, password)
+>>>>>>> send_mail.py
 text = msg.as_string()
 server.sendmail(fromaddr, toaddr, text)
 server.quit()

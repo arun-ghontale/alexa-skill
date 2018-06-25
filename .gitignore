@@ -9,9 +9,6 @@ alexa-skill-key.pem
 #log file
 log_file.pkl
 
-#files
-alexa_json.txt
-
 # C extensions
 *.so
 

@@ -1,0 +1,159 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "network bot",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "recognizeDates",
+                    "slots": [
+                        {
+                            "name": "errors",
+                            "type": "errorCodes"
+                        },
+                        {
+                            "name": "dateStart",
+                            "type": "AMAZON.TIME"
+                        },
+                        {
+                            "name": "dateEnd",
+                            "type": "AMAZON.TIME"
+                        },
+                        {
+                            "name": "number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "how many error logs at {dateStart}",
+                        "how many errors were encountered at {dateStart}",
+                        "can you pull the error logs at {dateStart}",
+                        "show me the error logs at {dateStart}",
+                        "can you pull the error logs from {dateStart}  to {dateEnd}",
+                        "show me the logs from {dateStart}  to {dateEnd}",
+                        "show me the error logs from {dateStart}  to {dateEnd}",
+                        "Can you pull logs from {dateStart}  to {dateEnd}"
+                    ]
+                },
+                {
+                    "name": "PollHprofs",
+                    "slots": [],
+                    "samples": [
+                        "to check for hprof files"
+                        "to check for hprof file status",
+                        "check for hprof file",
+                        "See if hprof file has been generated",
+                        "Check folder for hprof file",
+                        "poll folder for hprof file"
+                    ]
+                },
+                {
+                    "name": "SpinVMs",
+                    "slots": [],
+                    "samples": [
+                        "to spin up some virtual machines"
+                        "spin up some virtual machines",
+                        "spin up some VMs",
+                        "to spin up some VMs",
+                        "let's create some virtual machines",
+                        "let us spin up some VMs",
+                        "let us spin up some virtual machines",
+                        "Let's spin up some VM"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "errorCodes",
+                    "values": [
+                        {
+                            "id": "3",
+                            "name": {
+                                "value": "two"
+                            }
+                        },
+                        {
+                            "id": "2",
+                            "name": {
+                                "value": "five"
+                            }
+                        },
+                        {
+                            "id": "1",
+                            "name": {
+                                "value": "four"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "recognizeDates",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.700169025187"
+                    },
+                    "slots": [
+                        {
+                            "name": "errors",
+                            "type": "errorCodes",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "dateStart",
+                            "type": "AMAZON.TIME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "dateEnd",
+                            "type": "AMAZON.TIME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "number",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.700169025187",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure about the time period ?"
+                    }
+                ]
+            }
+        ]
+    }
+}
